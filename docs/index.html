@@ -11,18 +11,27 @@
 <body>
   <div id="app"></div>
   <script>
+    var gitalkConfig = {
+      clientID: 'ff61987b649e187695b4',
+      clientSecret: '36b066b454e704a842debc3ffe97b220597d5281',
+      repo: 'full-stack-note',
+      owner: 'GYunZhi',
+      admin: "[GYunZhi]",
+      distractionFreeMode: true
+    };
     window.$docsify = {
       name: '全栈学习记录',
-      repo: '',
+      repo: 'https://github.com/GYunZhi/full-stack-note.git',
       auto2top: true,
       coverpage: true,
       loadSidebar: true,
+      // autoHeader: true,
       maxLevel: 6,
       subMaxLevel: 2,
       search: {
         paths: 'auto',
-        placeholder: '🔍 Type to search ',
-        noData: '😞 No Results! ',
+        placeholder: '🔍 请输入关键字 ',
+        noData: '😞 没有匹配的搜索结果! ',
         depth: 6
       },
       pagination: {
@@ -30,6 +39,33 @@
         nextText: '上一篇',
         crossChapter: true
       },
+      plugins: [
+        function (hook, vm) {
+          hook.doneEach(function() {
+            var label, domObj, main, divEle, gitalk;
+            label = vm.route.path.split("/").pop();
+            domObj = Docsify.dom;
+            main = domObj.getNode("#main");
+
+            Array.apply(
+              null,
+              document.querySelectorAll("div.gitalk-container")
+            ).forEach(function(ele) {
+              ele.remove();
+            });
+
+            divEle = domObj.create("div");
+            divEle.id = "gitalk-container-" + label;
+            divEle.className = "gitalk-container";
+            divEle.style = "width: " + main.clientWidth + "px; margin: 0 auto 20px;";
+            domObj.appendTo(domObj.find(".content"), divEle);
+            gitalk = new Gitalk(
+              Object.assign(gitalkConfig, { id: !label ? "home" : label })
+            );
+            gitalk.render("gitalk-container-" + label);
+          });
+        }
+      ]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
