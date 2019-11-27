@@ -27,12 +27,12 @@ Node应用由模块组成，采用CommonJS模块化规范，在node中一个文�
 ​        module对象的属性：
 
 ```javascript
-	module.id 				 	模块的识别符，通常是带有绝对路径的模块文件名。
-	module.filename 	  模块的文件名，带有绝对路径。
-	module.loaded 			返回一个布尔值，表示模块是否已经完成加载。
-	module.parent 			返回一个对象，表示调用该模块的模块。
-	module.children 		返回一个数组，表示该模块要用到的其他模块。
-	module.exports 			表示模块对外输出的值。
+	module.id 				 		模块的识别符，通常是带有绝对路径的模块文件名。
+	module.filename 	  	模块的文件名，带有绝对路径。
+	module.loaded 				返回一个布尔值，表示模块是否已经完成加载。
+	module.parent 				返回一个对象，表示调用该模块的模块。
+	module.children 			返回一个数组，表示该模块要用到的其他模块。
+	module.exports 				表示模块对外输出的值。
 ```
 
 ####       require 方法
@@ -91,7 +91,9 @@ Node应用由模块组成，采用CommonJS模块化规范，在node中一个文�
 
 ## 全局变量 - global
 
-全局变量在所有模块中均可使用。 以下变量虽然看起来像全局变量，但实际上不是。 它们的作用域只在模块内，详见 [module文档](http://nodejs.cn/s/TQHXpm)：
+全局变量在所有模块中均可使用。 
+
+以下变量虽然看起来像全局变量，但实际上不是。 它们的作用域只在模块内，详见 [module文档](http://nodejs.cn/s/TQHXpm)：
 
 - [`__dirname`](http://nodejs.cn/s/etUQhi)
 - [`__filename`](http://nodejs.cn/s/RH6qCV)
@@ -104,13 +106,13 @@ Node应用由模块组成，采用CommonJS模块化规范，在node中一个文�
 process对象是一个全局变量，可以在任何地方都能访问到它，通过这个对象提供的属性和方法，使我们可以对当前运行的程序的进程进行访问和控制。
 
 ```javascript
-process.argv 				 	 返回一个包含命令行参数的数组
-process.env 				   返回用户环境信息
-process.version 		   返回node版本信息
-process.versions 		   返回node及node依赖包版本信息
-process.pid 					返回进程的pid
-process.title 				返回当前进程显示的名称
-process.arch 					返回CPU处理器架构
+process.argv 				 	 	返回一个包含命令行参数的数组
+process.env 				   	返回用户环境信息
+process.version 		   	返回node版本信息
+process.versions 		   	返回node及node依赖包版本信息
+process.pid 						返回进程的pid
+process.title 					返回当前进程显示的名称
+process.arch 						返回CPU处理器架构
 ```
 
  
@@ -171,29 +173,24 @@ process.stdin.on('data', function (chunk) {
 `Buffer` 类用于操作二进制数据流 。
 
 ```javascript
-(1) new Buffer(size) （size [Number]） 		创建一个Buffer对象，并为这个对象分配空间大小
+(1) Buffer.alloc(5) 		创建一个Buffer对象，并为这个对象分配空间大小
 
-  var bf = new Buffer(5)
+  var bf = Buffer.alloc(5)
   console.log(bf)
 
   // 当我们为一个Buffer对象分配空间大小之后，其长度是固定的，不能更改
   bf[5]=1;
   console.log(bf);
 
-(2) new Buffer([array]) 创建一个Buffer对象，并初始化
+(2) Buffer.alloc(4, 'abcd')  创建一个Buffer对象，并初始化
 
-  var bf=new Buffer([0x62, 0x75, 0x66, 0x66, 0x65, 0x72]);
+  var bf=Buffer.alloc(4, 'abcd');
   console.log(bf);
 
-(3) new Buffer(sring,[encoding]) 创建一个Buffer对象，并使用字符串初始化,第二个参数用于指定字符串编码
+(3) Buffer.from(sring,[encoding]) 创建一个Buffer对象，并使用字符串初始化,第二个参数用于指定字符串编码
 
   var bf=new Buffer('miaov','utf-8');
   console.log(bf);
-  console.log(bf[0].toString(16));
-  console.log(String.fromCharCode(bf[0]));
-  console.log(String.fromCharCode(bf[1]));
-  console.log(String.fromCharCode(bf[2]));
-  console.log(String.fromCharCode(bf[3]));
 
  (4) buf.length // 输出的是字节长度
  
@@ -207,7 +204,7 @@ process.stdin.on('data', function (chunk) {
    console.log(bf2.length); // 输出的是字节长度
 ```
 
-
+常用方法
 
 ```javascript
 (1) buf.write(string[, offset[, length]][, encoding]) 将字符串写入到Buffer中
@@ -274,10 +271,11 @@ process.stdin.on('data', function (chunk) {
     console.log(bf);
 ```
 
-```javascript
+
 
 静态方法
 
+```javascript
 Buffer.isEncoding('utf-8') 		   检测Buffer对象是否支持某种编码
 
 Buffer.isBuffer(bf) 					  判断某个对象是否是Buffer对象
@@ -592,7 +590,7 @@ process.stdin.on('data',function (chunk){
 
 ## 网络编程 - http
 
-  通过http模块，可以非常方便的搭建一个http服务器。
+  通过http模块，可以非常方便的搭建一个 http 服务器
 
 ### 搭建http服务器
 
@@ -782,5 +780,151 @@ function sendData(file, req, res) {
 }
 
 总结： http模块配合url模块、fs模块、queryString搭建了一个对于不同的http请求进行响应的web服务器
+```
+
+## 异步处理
+
+### 流程控制
+
+Node.js 通过回调函数来实现异步操作，这样很容易导致回调地狱，影响代码的可读性和可维护性。
+
+```js
+const fs = require("fs");
+const { promisify } = require("util");
+const readFile = promisify(fs.readFile);
+
+// 要求: 按顺序输出 1.txt、2.txt、3.txt 三个文件中的内容
+
+// callback
+fs.readFile(__dirname + "/1.txt", function(err, data) {
+  if (err) {
+    console.log(" 文件读取失败");
+  } else {
+    console.log(data.toString());
+    fs.readFile(__dirname + "/2.txt", function(err, data) {
+      if (err) {
+        console.log(" 文件读取失败");
+      } else {
+        console.log(data.toString());
+        fs.readFile(__dirname + "/3.txt", function(err, data) {
+          if (err) {
+            console.log(" 文件读取失败");
+          } else {
+            console.log(data.toString());
+          }
+        });
+      }
+    });
+  }
+});
+
+
+
+// promise
+// readFile(__dirname + "/1.txt").then(data => {
+//   console.log(data.toString())
+//   return readFile(__dirname + "/2.txt")
+// }).then((data) => {
+//   console.log(data.toString())
+//   return readFile(__dirname + "/3.txt")
+// }).then(data => {
+//   console.log(data.toString())
+// })
+
+
+
+// generate
+// const co = require("co")
+// function co (gen) {
+//   var it = gen()
+//   function next(data){
+//     var result = it.next(data)
+//     if (result.done) return result.value
+//     result.value.then(function(data) {
+//       next(data);
+//     });
+//   }
+//   next();
+// }
+
+// const generator = function* () {
+//   yield readFile(__dirname + "/1.txt").then(data => {
+//     console.log(data.toString());
+//   });
+//   yield readFile(__dirname + "/2.txt").then(data => {
+//     console.log(data.toString());
+//   });
+//   yield readFile(__dirname + "/3.txt").then(data => {
+//     console.log(data.toString());
+//   });
+// };
+
+// const gen = generator('Generator')
+// gen.next()
+// gen.next()
+// gen.next()
+
+// co(generator)
+
+
+
+// async/await
+// (async() => {
+//   await readFile(__dirname + "/1.txt").then((data) => { console.log(data.toString()) })
+//   await readFile(__dirname + "/2.txt").then((data) => { console.log(data.toString()) })
+//   await readFile(__dirname + "/3.txt").then((data) => { console.log(data.toString()) })
+// })()
+
+
+```
+
+### 异常处理
+
+```js
+// Node.js 回调风格
+// 最后一个参数是回调函数
+// 回调函数的参数为 (err, result)，前面是可能的错误，后面是正常的结果
+
+const fs = require("fs");
+const { promisify } = require("util");
+
+function readFile(filename, callback) {
+  try {
+    let result = fs.readFileSync(filename);
+    callback(null, result);
+  } catch (error) {
+    callback(error);
+  }
+}
+
+// 回调方式
+// readFile(__dirname + "/test.txt", (err, data) => {
+//   if (err) {
+//     console.log(" 文件读取失败");
+//   } else {
+//     console.log(data.toString());
+//   }
+// });
+
+// promise
+// const readFile2 = promisify(readFile)
+
+// readFile2(__dirname + "/test.txt").then(data => {
+//   console.log(data.toString());
+// }).catch(err => {
+//   console.log(" 文件读取失败");
+// })
+
+// async/await
+const readFile3 = promisify(readFile)
+
+setTimeout(async () => {
+  try {
+    let data = await readFile3(__dirname + "/test.txt")
+    console.log(data.toString())
+  } catch (err) {
+    console.log("文件读取失败")
+  }
+})
 ```
 
