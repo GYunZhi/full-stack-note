@@ -1,4 +1,4 @@
-## 一、概述
+## 概述
 
 JavaScript 语言采用的是单线程模型，也就是说，所有任务只能在一个线程上完成，一次只能做一件事。前面的任务没做完，后面的任务只能等着。随着电脑计算能力的增强，尤其是多核 CPU 的出现，单线程带来很大的不便，无法充分发挥计算机的计算能力。
 
@@ -30,7 +30,7 @@ Worker 线程无法读取本地文件，即不能打开本机的文件系统（`
 
 ## 基本用法
 
-### 2.1 主线程
+### 主线程
 
 主线程采用`new`命令，调用`Worker()`构造函数，新建一个 Worker 线程。
 
@@ -73,7 +73,7 @@ Worker 完成任务以后，主线程就可以把它关掉。
 worker.terminate();
 ```
 
-### 2.2 Worker 线程
+### Worker 线程
 
 Worker 线程内部需要有一个监听函数，监听`message`事件。
 
@@ -120,7 +120,7 @@ self.addEventListener('message', function (e) {
 
 上面代码中，`self.close()`用于在 Worker 内部关闭自身。
 
-### 2.3 Worker 加载脚本
+### Worker 加载脚本
 
 Worker 内部如果要加载其他脚本，有一个专门的方法`importScripts()`。
 
@@ -134,7 +134,7 @@ importScripts('script1.js');
 importScripts('script1.js', 'script2.js');
 ```
 
-### 2.4 错误处理
+### 错误处理
 
 主线程可以监听 Worker 是否发生错误。如果发生错误，Worker 会触发主线程的`error`事件。
 
@@ -153,7 +153,7 @@ worker.addEventListener('error', function (event) {
 
 Worker 内部也可以监听`error`事件。
 
-### 2.5 关闭 Worker
+### 关闭 Worker
 
 使用完毕，为了节省系统资源，必须关闭 Worker。
 
@@ -165,7 +165,7 @@ worker.terminate();
 self.close();
 ```
 
-## 三、数据通信
+## 数据通信
 
 前面说过，主线程与 Worker 之间的通信内容，可以是文本，也可以是对象。需要注意的是，这种通信是拷贝关系，即是传值而不是传址，Worker 对通信内容的修改，不会影响到主线程。事实上，浏览器内部的运行机制是，先将通信内容串行化，然后把串行化后的字符串发给 Worker，后者再将它还原。
 
@@ -232,7 +232,7 @@ worker.onmessage = function (e) {
 
 上面代码中，先将嵌入网页的脚本代码，转成一个二进制对象，然后为这个二进制对象生成 URL，再让 Worker 加载这个 URL。这样就做到了，主线程和 Worker 的代码都在同一个网页上面。
 
-## 五、实例：Worker 线程完成轮询
+## 实例：Worker 线程完成轮询
 
 有时，浏览器需要轮询服务器状态，以便第一时间得知状态改变。这个工作可以放在 Worker 里面。
 
@@ -340,9 +340,9 @@ function work() {
 }
 ```
 
-## 七、API
+## API
 
-### 7.1 主线程
+### 主线程
 
 浏览器原生提供`Worker()`构造函数，用来供主线程生成 Worker 线程。
 
@@ -368,7 +368,7 @@ self.name // myWorker
 - Worker.postMessage()：向 Worker 线程发送消息。
 - Worker.terminate()：立即终止 Worker 线程。
 
-### 7.2 Worker 线程
+### Worker 线程
 
 Web Worker 有自己的全局对象，不是主线程的`window`，而是一个专门为 Worker 定制的全局对象。因此定义在`window`上面的对象和方法不是全部都可以使用。
 
