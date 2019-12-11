@@ -84,7 +84,7 @@ app.listen(3000, () => {
 
 ## context
 
-koa 为了能简化API，引入上下文 context 的概念，将原始请求对象 req 和响应对象 res 封装并挂载到 context 上，并且在 context 上设置getter和setter，从而简化操作。
+koa 为了能简化API，引入上下文 context 的概念，将原始请求对象 req 和响应对象 res 封装并挂载到 context 上，并且在 context 上设置 getter 和 setter，从而简化操作。
 
 ```js
 // app.js

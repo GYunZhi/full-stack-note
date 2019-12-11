@@ -1,6 +1,6 @@
-# Charles安装
+# Charles抓包
 
-### 安装Charles
+## 安装Charles
 
 - 下载地址
 
@@ -14,7 +14,7 @@
 
   License Key: 	48891cf209c6d32bf4
 
-### 抓取HTTPS请求（window为参考）
+## 抓取HTTPS请求（window为参考）
 
 - 安装Charles证书
 
@@ -84,15 +84,15 @@
 
 ![mark](https://gongyz.oss-cn-shenzhen.aliyuncs.com/blog/cFaBsPGOSDhR.png?imageslim)
 
-### 抓取浏览器的HTTPS请求（以火狐参考）
+## 抓取浏览器的HTTPS请求（以火狐参考）
 
 导入本地的证书
 
-### 抓取移动端的HTTPS请求
+## 抓取移动端的HTTPS请求
 
 手机访问https://chls.pro/ssl 下载并安装证书
 
-#### IOS11无法抓取https问题
+## IOS11无法抓取https问题
 
 进入 通用 关于本机 证书信任设置，打开对Charles证书的信任即可
 
