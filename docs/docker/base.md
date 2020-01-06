@@ -21,6 +21,9 @@ docker version
 
 # 重启docker
 sudo service docker restart
+
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
 ```
 
 ## Docker架构和底层技术
@@ -511,7 +514,7 @@ docker run -d -v mysql:/var/lib/mysql --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD
 docker run -d -p 3000:3000 -v $(pwd)/html:/node-http/html gongyz/node-http
 ```
 
-### Docker Compose 多容器部署
+## Docker Compose 多容器部署
 
 #### 手动部署 wordpress 
 
@@ -1167,10 +1170,10 @@ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rp
 sudo EXTERNAL_URL="http://gitlab.example.com" yum install -y gitlab-ce
 ```
 
-如果不想设置域名，或者想将来再考虑，可以直接
+如果不想设置域名，或者想将来再考虑，可以设置为 ip 地址
 
 ```bash
-sudo yum install -y gitlab-ce
+sudo EXTERNAL_URL="http://106.12.48.161:80" yum install -y gitlab-ce
 ```
 
 安装完成以后，运行下面的命令进行配置
@@ -1187,6 +1190,9 @@ sudo vim /etc/gitlab/gitlab.rb
 
 # 修改配置之后重新配置 gitlab
 sudo gitlab-ctl reconfigure
+
+# 使用 docker 安装 gitlab，修改 EXTERNAL_URL="http://106.12.48.161:18080" 后需重新启动容器
+docker run -d  -p 1443:443 -p 18080:18080 -p 222:22 --name gitlab --restart always -v /usr/local/docker/gitlab/config:/etc/gitlab -v /usr/local/docker/gitlab/logs:/var/log/gitlab -v /usr/local/docker/gitlab/data:/var/opt/gitlab gitlab/gitlab-ce
 ```
 
 **5. 登陆和修改密码**
@@ -1255,7 +1261,7 @@ Jobs 表示构建工作，表示某个 Stage 里面执行的工作。我们可�
 ```
 ## 其他
 
-#### Registry 私有库搭建
+### Registry 私有库搭建
 
 ```bash
 # registry
@@ -1265,7 +1271,51 @@ docker run -d -p 5000:5000 -v path:/var/lib/registry --restart=always --name reg
 docker run -d -p 8080:8080 --name registry-web --link registry -e REGISTRY_URL=http://registry:5000/v2 -e REGISTRY_NAME=localhost:5000 hyper/docker-registry-web
 ```
 
-#### Jenkins 安装
+### Harbor 私有库搭建
+
+```bash
+# 安装docker-compose
+yum install docker-compose
+
+# 下载在线安装版
+wget --continue https://github.com/goharbor/harbor/releases/download/v1.9.3/harbor-online-installer-v1.9.3.tgz
+
+# 解压 
+tar -zxvf harbor-online-installer-v1.9.3.tgz
+
+# 修改配置文件harbor.yml
+hostname = 106.12.48.161 # 不能使用localhost和127.0.0.1，因为harbor需要被外部客户端访问
+max_job_workers: 30 # 作业服务中的最大复制worker数，考虑到服务器的性能，修改成了30
+
+# 运行prepare 更新参数
+./prepare
+
+# 执行 install.sh 安装harbor
+bash install.sh
+
+# 配置Insecure Registry
+
+vim /etc/docker/daemon.json
+{
+  "registry-mirrors": ["https://p1plp029.mirror.aliyuncs.com"],
+  "insecure-registries": ["192.168.37.170"] # 手动添加
+}
+
+或者
+
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+	"registry-mirrors": ["https://p1plp029.mirror.aliyuncs.com"],
+  "insecure-registries": ["192.168.37.170"]
+}
+EOF
+
+# 重启 docker 服务
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+### Jenkins 安装
 
 ```bash
 # 其他自动化部署方案

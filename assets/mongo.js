@@ -31,7 +31,6 @@
 
 
 
-
 // 查询文档
 
 // db.col.find()
@@ -106,7 +105,9 @@
 // 字段操作符
 // db.col.find({'_id.type': {$exists: true}})
 
-// db.col.find({"title" : {$type : 'string'}})
+// db.col.find({"title" : {$type : 'string'}})
+
+// db.col.find({"title" : {$type : 2}}) // String类型 数字为2
 
 // 数组操作符
 // db.col.find({ tags: { $all: [ 'NoSQL' , 'database'] } })
@@ -124,8 +125,8 @@
 
 // 文档游标
 // var myCursor = db.col.find()
-
-// var myCursor = db.col.find().noCursorTimeout()
+// 
+var myCursor = db.col.find().noCursorTimeout()
 
 // myCursor
 
@@ -138,7 +139,13 @@
 
 // myCursor.forEach(function(item){
 //   printjson(item)
-// })
+// })
+
+// myCursor.limit(2)
+
+// myCursor.skip(2)
+
+// myCursor.count()
 
 // db.col.find().limit(1)
 
@@ -160,7 +167,7 @@
 // 更新文档
 
 // 匹配更新
-// db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
+db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 
 // db.col.update({name:'gongyz'},{adress: '江西'}, {upsert: true})
 
@@ -245,17 +252,17 @@
 
 // $position、$sort、$slice可以一起使用，但这三个操作符的执行顺序是：$position、$sort、$slice，写在命令中操作符的顺序并不重要，并不会影响命令的执行顺序
 
-// db.col.updateMany({'title':'MongoDB 教程'}, {$push: {arr: {$each: [6, 8], $position: 0, $sort: -1, $slice: 2}}})
+// db.col.updateMany({'title':'MongoDB 教程'}, {$push: {arr: {$each: [6, 8], $position: 0, $sort: -1, $slice: 2}}})
+
+// 更新数组中所有元素
+// db.col.updateMany({'title':'MongoDB 教程'}, {$set: {'arr.$[]': 'updated'}})
 
 // $是数组中第一个符合筛选条件的数组元素的占位符（query中需要指明要更新的数组元素）
 // db.col.updateMany({'title':'MongoDB 教程','arr': 'updated'}, {$set: {'arr.$': 1}})
 
-// 更新数组中所有元素
-// db.col.updateMany({'title':'MongoDB 教程'}, {$set: {'arr.$[]': 'updated'}})
-
 // save()命令更新文档
 // db.col.save({
-//     _id: ObjectId("5ce5ef8caa5dacd1c36450e1"),
+//     _id: ObjectId("5e00a540edbd548b63736846"),
 //     title: 'MongoDB 新教程', 
 //     description: 'MongoDB 是一个 Nosql 数据库',
 //     by: '菜鸟教程',
@@ -263,7 +270,7 @@
 //     tags: ['mongodb', 'database', 'NoSQL'],
 //     likes: 1000
 // })
-
+// 
 
 
 // 删除文档
@@ -479,7 +486,7 @@
 //         }
 //     }
 // ])
-
+// 
 
 // 展开时将数组元素在原数组中的下标位置写入一个指定的字段中
 // db.user.aggregate([
@@ -687,7 +694,7 @@
 //        $out: 'output'
 //     }
 // ])
-
+// 
 // 如果聚合管道操作遇到错误，$out不会创建新集合或者是覆盖已存在的集合内容
 
 // MongoDB对聚合操作的优化
@@ -961,38 +968,37 @@
 // db.userWithIndex.insert({name: 'cherlie', lastAccess: new Date()})
 // db.userWithIndex.insert({name: 'david', lastAccess: new Date()}) 
 
-// 复合键索引也可以具有唯一性，在这种情况下，不同的文档之间，其所包含的复合键字段值的组合，不可以重复
-
-
-// 创建具有稀疏性的索引
-// db.userWithIndex.createIndex({balance: 1}, {sparse: true})
-
-// 只将包含索引字段的文档加入到索引中（即便索引字段值为 null）
-// db.userWithIndex.insert({name: 'cherlie', lastAccess: new Date()})
-
-// 如果同一个索引既具有唯一性，又具有稀疏性，就可以保存多篇缺失索引键值得文档了
-// db.userWithIndex.createIndex({balance: 1}, {unique: true, sparse: true})
-// db.userWithIndex.insert({name: 'cherlie', lastAccess: new Date()})
-
-// 复合键索引也可以具有稀疏性，在这种情况下，只有在缺失复合键所包含的所有字段的情况下，文档才不会被加入到索引中
-
-
-
-// 索引的生存时间
-// 针对日期字段，或者包含日期字段的数组字段，可以使用设定了生存时间的索引，来自动删除字段值超过生存时间的文档
-
-
-// 在 lastAccess 字段上创建一个生存时间是20s的索引
-// db.userWithIndex.createIndex({lastAccess: 1}, {expireAfterSeconds: 20})
-// db.userWithIndex.insert({name: 'eddie', lastAccess: new Date()})
-
-
-// 复合键索引不具备生存时间特效
-// 当索引建是包含日期元素的数组字段时，数组中最小的日期将被用来计算文档是否过期
-// 数据库使用一个后台线程来监测和删除过期的文档，删除操作可能会有一定的延迟
-
-
-// db.userWithIndex.remove({name: 'cherlie'})
+// 复合键索引也可以具有唯一性，在这种情况下，不同的文档之间，其所包含的复合键字段值的组合，不可以重复
+
+// 创建具有稀疏性的索引
+// db.userWithIndex.createIndex({balance: 1}, {sparse: true})
+
+// 只将包含索引字段的文档加入到索引中（即便索引字段值为 null）
+// db.userWithIndex.insert({name: 'cherlie', lastAccess: new Date()})
+
+// 如果同一个索引既具有唯一性，又具有稀疏性，就可以保存多篇缺失索引键值得文档了
+// db.userWithIndex.createIndex({balance: 1}, {unique: true, sparse: true})
+// db.userWithIndex.insert({name: 'cherlie', lastAccess: new Date()})
+
+// 复合键索引也可以具有稀疏性，在这种情况下，只有在缺失复合键所包含的所有字段的情况下，文档才不会被加入到索引中
+
+
+
+// 索引的生存时间
+// 针对日期字段，或者包含日期字段的数组字段，可以使用设定了生存时间的索引，来自动删除字段值超过生存时间的文档
+
+
+// 在 lastAccess 字段上创建一个生存时间是20s的索引
+// db.userWithIndex.createIndex({lastAccess: 1}, {expireAfterSeconds: 20})
+// db.userWithIndex.insert({name: 'eddie', lastAccess: new Date()})
+
+
+// 复合键索引不具备生存时间特效
+// 当索引建是包含日期元素的数组字段时，数组中最小的日期将被用来计算文档是否过期
+// 数据库使用一个后台线程来监测和删除过期的文档，删除操作可能会有一定的延迟
+
+
+// db.userWithIndex.remove({name: 'cherlie'})
 // db.userWithIndex.dropIndex('balance_1')
 // db.col.find().pretty()
 // db.user.find().pretty()
