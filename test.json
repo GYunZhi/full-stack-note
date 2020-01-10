@@ -1,9 +1,0 @@
-{
-  "_id": ObjectId("56064f89ade2f21f36b03136"),
-  "title": "MongoDB",
-  "description": "MongoDB 是一个 Nosql 数据库",
-  "by": "Runoob",
-  "url": "http://www.runoob.com",
-  "tags": ["mongodb", "NoSQL"],
-  "likes": 110
-}

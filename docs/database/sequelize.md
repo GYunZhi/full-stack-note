@@ -35,7 +35,7 @@ Sequelize 将默认保持连接持续,并对所有查询使用相同的连接. �
 ## 模型定义
 
 ```js
-// fruit.js
+// index.js
 (async () => {
   const Sequelize = require('sequelize')
 
@@ -151,11 +151,10 @@ name: {
 } 
 
 // 定义为模型参数的一部分， 在options中
-{
-	getterMethods:{
-		amount(){
-		return this.getDataValue("stock") + "kg";
-	}
+getterMethods: {
+  amount(){
+    return this.getDataValue("stock") + "kg";
+  }
 },
 setterMethods: {
   amount(val) {
@@ -163,7 +162,7 @@ setterMethods: {
     const num = val.slice(0, arr)
     this.setDataValue('stock', num)
   }
-} 
+}
   
 // 通过模型实例触发getter 和 setter 函数
 await Fruit.findAll().then(fruits => {
