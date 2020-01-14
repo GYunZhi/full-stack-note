@@ -305,3 +305,13 @@ Fruit.destroy({ where: { id: 1 } }).then(r => console.log(r))
 ```
 
 ## 关联
+
+待更新...
+
+## 事务
+
+待更新...
+
+## 作用域
+
+待更新...
