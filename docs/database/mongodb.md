@@ -91,7 +91,7 @@ MongoDB默认会创建local、admin、config数据库，可以直接访问这些
 
 #### 慎用local数据库
 
-local数据库，从名字可以看出，它只会在本地存储数据，即local数据库里的内容不会同步到副本集里其他节点上去；目前local数据库主要存储副本集的配置信息、oplog信息，这些信息是每个Mongod进程独有的，不需要同步到副本集种其他节点。
+local数据库，从名字可以看出，它只会在本地存储数据，即local数据库里的内容不会同步到副本集里其他节点上去；目前local数据库主要存储副本集的配置信息、oplog信息，这些信息是每个Mongod进程独有的，不需要同步到副本集中其他节点。
 
 在使用MongoDB时，`重要的数据千万不要存储在local数据库中`，否则当一个节点故障时，存储在local里的数据就会丢失。
 
@@ -184,25 +184,22 @@ db.col.findOne()
 
 ### MongoDB 数据类型
 
-下表为MongoDB中常用的几种数据类型。
+MongoDB通过BSON（Binary JSON）来描述和存放数据。BSON是一种可进行二进制序列化的，类JSON格式的文档对象，下表为MongoDB中常用的几种数据类型：
 
-| 数据类型           | 描述                                                         |
-| ------------------ | ------------------------------------------------------------ |
-| String             | 字符串。存储数据常用的数据类型。在 MongoDB 中，UTF-8 编码的字符串才是合法的。 |
-| Integer            | 整型数值。用于存储数值。根据你所采用的服务器，可分为 32 位或 64 位。 |
-| Boolean            | 布尔值。用于存储布尔值（真/假）。                            |
-| Double             | 双精度浮点值。用于存储浮点值。                               |
-| Min/Max keys       | 将一个值与 BSON（二进制的 JSON）元素的最低值和最高值相对比。 |
-| Array              | 用于将数组或列表或多个值存储为一个键。                       |
-| Timestamp          | 时间戳。记录文档修改或添加的具体时间。                       |
-| Object             | 用于内嵌文档。                                               |
-| Null               | 用于创建空值。                                               |
-| Symbol             | 符号。该数据类型基本上等同于字符串类型，但不同的是，它一般用于采用特殊符号类型的语言。 |
-| Date               | 日期时间。用 UNIX 时间格式来存储当前日期或时间。你可以指定自己的日期时间：创建 Date 对象，传入年月日信息。 |
-| Object ID          | 对象 ID。用于创建文档的 ID。                                 |
-| Binary Data        | 二进制数据。用于存储二进制数据。                             |
-| Code               | 代码类型。用于在文档中存储 JavaScript 代码。                 |
-| Regular expression | 正则表达式类型。用于存储正则表达式。                         |
+| 数据类型    | 描述                                               |
+| ----------- | -------------------------------------------------- |
+| String      | 字符串，在 MongoDB 中，只支持UTF-8 编码的字符串    |
+| Integer     | 整数值，根据你所采用的服务器，可分为 32 位或 64 位 |
+| Double      | 双精度浮点数，数字默认都是双精度浮点数             |
+| Boolean     | 布尔值                                             |
+| Array       | 数组                                               |
+| Object      | 对象                                               |
+| Null        | 表示空对象                                         |
+| Date        | 日期（UTC 时间）                                   |
+| Timestamp   | 时间戳，记录文档修改或添加的具体时间               |
+| ObjectId    | 对象 ID，一般用于默认主键                          |
+| Binary Data | 二进制数据                                         |
+| Code        | 代码类型，用于在文档中存储 JavaScript 代码         |
 
 下面说明下几种重要的数据类型。
 
@@ -210,16 +207,16 @@ db.col.findOne()
 
 ObjectId 类似唯一主键，包含 12 bytes，含义是：
 
-- 前 4 个字节表示创建 **unix** 时间戳,格林尼治时间 **UTC** 时间，比北京时间晚了 8 个小时
+- 前 4 个字节表示 **Unix 时间戳 **（**UTC** 时间，比北京时间晚了 8 个小时）
 - 接下来的 3 个字节是机器标识码
-- 紧接的两个字节由进程 id 组成 PID
+- 紧接的两个字节由进程 id 组成（PID）
 - 最后三个字节是随机数
 
 ![img](https://www.runoob.com/wp-content/uploads/2013/10/2875754375-5a19268f0fd9b_articlex.jpeg)
 
-MongoDB 中存储的文档必须有一个 _id 键。这个键的值可以是任何类型的，默认是个 ObjectId 对象。
+**MongoDB 中存储的文档必须有一个 _id 键。这个键的值可以是除数组外的任何类型，默认是个 ObjectId 对象。**
 
-由于 ObjectId 中保存了创建的时间戳，所以你不需要为你的文档保存时间戳字段，你可以通过 getTimestamp 函数来获取文档的创建时间:
+由于 ObjectId 中保存了文档创建的时间戳，所以你不需要为你的文档保存时间戳字段，你可以通过 getTimestamp 函数来获取文档的创建时间:
 
 ```javascript
 > var newObject = ObjectId()
@@ -500,16 +497,12 @@ runoob
 
 ### 插入文档
 
-文档的数据结构和JSON基本一样。
-
-所有存储在集合中的数据都是BSON格式。
-
-BSON 是一种类似 JSON 的二进制形式的存储格式，是 Binary JSON 的简称。
+MongoDB 中文档的数据结构和 JSON 基本一样，所有存储在集合中的数据都是BSON格式，BSON 是一种类似 JSON 的二进制形式的存储格式，是 Binary JSON 的简称。
 
 #### 语法
 
 ```javascript
-db.COLLECTION_NAME.insert(document)
+db.collection.insert(document or array of documents)
 ```
 
 #### 实例
@@ -576,13 +569,28 @@ db.col.insert({
 WriteResult({ "nInserted" : 1 })
 ```
 
-#### 其他语法
+**一次插入多条数据**
 
- **插入文档你也可以使用 db.col.save(document) 命令。如果不指定 _id 字段 save() 命令将会调用insert() 命令，创建新文档。** 
+1、先创建数组
+
+2、将数据放在数组中
+
+3、一次 insert 到集合中
+
+```javascript
+var arr = [];
+
+for(var i = 1; i<=20000; i++){ arr.push({num: i}); }
+
+db.numbers.insert(arr);
+```
+
+#### 其他语法
 
 **3.2 版本后还有以下几种语法可用于插入文档：**
 
 -  db.collection.insertOne()：向指定集合中插入一条文档数据
+
 -  db.collection.insertMany()：向指定集合中插入多条文档数据
 
 ```javascript
@@ -607,33 +615,9 @@ WriteResult({ "nInserted" : 1 })
 }
 ```
 
-**一次插入多条数据**
-
-1、先创建数组
-
-2、将数据放在数组中
-
-3、一次 insert 到集合中
-
-```javascript
-var arr = [];
-
-for(var i = 1; i<=20000; i++){ arr.push({num: i}); }
-
-db.numbers.insert(arr);
-```
+ **插入文档你也可以使用 db.col.save(document) 命令。如果不指定 _id 字段 save() 命令将会调用insert() 命令，创建新文档。** 
 
 ```js
-// 插入文档
-db.col.insert({
-  "title": "MongoDB 教程",
-  "description": "MongoDB 是一个 Nosql 数据库",
-  "by": "菜鸟教程",
-  "url": "http: //www.runoob.com",
-  "tags": ["mongodb", "database", "NoSQL", [1, 2]],
-  "likes": 100
-})
-
 db.col.save({
   "title": "MongoDB 新教程",
   "description": "MongoDB 是一个 Nosql 数据库",
@@ -642,7 +626,6 @@ db.col.save({
   "tags": ["mongodb", "database", "NoSQL"],
   "likes": 1000
 })
-
 ```
 
 ### 查询文档
@@ -749,7 +732,7 @@ db.col.find({title:/^MongoDB/}, {_id:0, title: 1, tags: {$slice: 1}})
 
 语法：
 
-`{field: {$<opetator>: value} }`
+`{ field: {$<opetator>: value} }`
 
 $eq：匹配字段值相等的文档
 
@@ -909,7 +892,7 @@ $regex
 {  <field>: { $regex: /pattern/, $options: '<options>' } }
  { <field>: { $regex: /pattern/<options> } }
 
-兼容PCRE v8.41正则表达库，在和$in操作符一起使用时，只能使用 /pattern/<options>，不能使用$ regex运算符表达式。
+兼容PCRE v8.41正则表达库，在和$in操作符一起使用时，只能使用 /pattern/<options>，不能使用 $regex 运算符表达式。
 
 在设置索弓的字段上进行正则匹配可以提高查询速度，而且当正则表达式使用的是前缀表达式时，查询速度会进一步提高，例如：{ name: { $regex:  /^a/ }。
 
@@ -958,9 +941,9 @@ myCursor.close()
 
 ##### 游标函数
 
-cursor.hasNext() 	判断游标是否取到尽头
+**cursor.hasNext()** 	判断游标是否取到尽头
 
-cursor.next()		获取游标的下一个单元
+**cursor.next()**		获取游标的下一个单元
 
 ```js
 // 游标遍历
@@ -973,9 +956,9 @@ myCursor.forEach(function(item){
 })
 ```
 
-cursor.limit(<number>)	读取指定数量的数据记录，参数为 0 相当于不使用limit
+**cursor.limit(<number>)**	读取指定数量的数据记录，参数为 0 相当于不使用limit
 
-cursor.skip(<number>)	跳过指定数量的数据
+**cursor.skip(<number>)**	跳过指定数量的数据
 
 ```js
 db.col.find().limit(1)
@@ -985,11 +968,11 @@ db.col.find().limit(0) // 参数为 0 相当于不使用limit
 db.col.find().limit(1).skip(1)
 ```
 
-cursor.count(<applySkipLimit>)	获取游标中总的文档数量
+**cursor.count(<applySkipLimit>)**	获取游标中总的文档数量
 
 默认情况下，<applySkipLimit>为false，即cursor.count()不会考虑limit()、skip()的效果，在不提供筛选条件时，cursor.count(会从)集合的元数据Metadata中取得结果。当数据库分布式结构较为复杂时，元数据中的文档数量可能不准确，所有我们应该避免使用不提供筛选条件的cursor.count()函数，而使用聚合管道来计算文档数量。
 
-cursor.sort(<document>)	对游标中的文档进行排序，<document>定义了排序要求	{ field: ordering}		
+**cursor.sort(<document>)**	对游标中的文档进行排序，<document>定义了排序要求	{ field: ordering}		
 
 1表示从小到大正向排序，-1表示从大到小逆向排序
 
@@ -1403,15 +1386,15 @@ db.<collection>.aggregate(<pipeline>,  <options>)
 
 #### 字段路径表达式
 
-$<filed>   使用$来指示文档字段
+`$<filed>`   使用$来指示文档字段
 
-$<filed>.<sub-filed>   使用$和.来指示内嵌文档字段
+`$<filed>.<sub-filed>`   使用$和.来指示内嵌文档字段
 
 #### 系统变量表达式
 
-$$<variable>   使用$$来指示系统变量
+`$$<variable>`   使用$$来指示系统变量
 
-$$CURRENT 	指示管道中当前操作的文档
+`$$CURRENT` 	指示管道中当前操作的文档
 
 ```js
 $$CURRENT .<filed> 和 $<filed>是等效的
@@ -1419,9 +1402,9 @@ $$CURRENT .<filed> 和 $<filed>是等效的
 
 #### 常量表达式
 
-$literal: <value>    指示常量字<value>
+`$literal: <value>`    指示常量字<value>
 
-$literal: ‘$name’       指示常量字符串'$name',这里的$被当作常量处理，而不是字段路径表达式
+`$literal: ‘$name’`       指示常量字符串'$name',这里的$被当作常量处理，而不是字段路径表达式
 
 ### 聚合管道操作符
 
@@ -1988,8 +1971,8 @@ db.transactions.aggregate([
 
 ### 基本概念
 
-- 对文档部分内容进行排序的数据结构
-- 加快文档查询和文档排序的速度
+- 对文档指定字段进行排序的数据结构
+- 加快文档查询和排序的速度
 - 复合键索引只能支持前缀子查询
 
 例：A、B、C三个字段的复合索引，对索引中A、AB、ABC字段的查询称之为前缀子查询
@@ -2010,14 +1993,14 @@ createIndex()方法基本语法格式如下所示：
 // 创建一个单键索引
 db.userWithIndex.createIndex({name: 1})
 
-// 查看集合中已经存在的索引
-db.userWithIndex.getIndexes()
-
 // 创建一个复合索引
 db.userWithIndex.createIndex({name: 1, balance: -1})
 
 // 创建一个多键索引(用于数组的索引，数组字段中的每一个元素，都会在多键索引中创建一个键)
 db.userWithIndex.createIndex({currency: 1})
+
+// 查看集合中已经存在的索引
+db.userWithIndex.getIndexes()
 ```
 
 #### 查看索引
@@ -2028,9 +2011,12 @@ db.userWithIndex.getIndexes()
 
 #### 查询分析
 
+- 检视索引的效果
+- explain()
+
 ```js
 // 使用没有创建索引的字段进行搜索
-// COLLSCAN
+// COLLSCAN (Collection Scan 扫描整个集合，低效的查询)
 db.userWithIndex.find({balance: 100}).explain()
 
 // 使用已经创建索引的字段进行搜索
@@ -2039,7 +2025,7 @@ db.userWithIndex.find({balance: 100}).explain()
 db.userWithIndex.find({name: 'alice'}).explain()
 
 // 仅返回创建了索引的字段（查询效率更高）
-// IXSCAN —> PROJECTION
+// PROJECTION —> IXSCAN
 db.userWithIndex.find({name: 'alice'}, {_id: 0, name: 1}).explain()
 
 // 使用已经创建索引的字段进行排序
@@ -2118,3 +2104,4 @@ db.userWithIndex.insert({name: 'eddie', lastAccess: new Date()})
 // 数据库使用一个后台线程来监测和删除过期的文档，删除操作可能会有一定的延迟
 ```
 
+## 六、 MongoDB之数据模型

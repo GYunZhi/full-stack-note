@@ -105,8 +105,8 @@
 // 字段操作符
 // db.col.find({'_id.type': {$exists: true}})
 
-// db.col.find({"title" : {$type : 'string'}})
-
+// db.col.find({"title" : {$type : 'string'}})
+
 // db.col.find({"title" : {$type : 2}}) // String类型 数字为2
 
 // 数组操作符
@@ -121,14 +121,12 @@
 // 运算操作符
 // db.col.find({title: { $in: [/^M/, /阶$/]}})
 
-// db.col.find({title: { $regex: /^m/, $options: 'i'}})
+// db.col.find({title: { $regex: /^m/, $options: 'i'}})
+
 
 // 文档游标
-// var myCursor = db.col.find()
-// 
-var myCursor = db.col.find().noCursorTimeout()
-
-// myCursor
+var myCursor = db.col.find()
+// var myCursor = db.col.find().noCursorTimeout()
 
 // myCursor.close()
 
@@ -139,12 +137,12 @@ var myCursor = db.col.find().noCursorTimeout()
 
 // myCursor.forEach(function(item){
 //   printjson(item)
-// })
-
-// myCursor.limit(2)
-
-// myCursor.skip(2)
-
+// })
+
+// myCursor.limit(2)
+
+// myCursor.skip(2)
+
 // myCursor.count()
 
 // db.col.find().limit(1)
@@ -167,7 +165,7 @@ var myCursor = db.col.find().noCursorTimeout()
 // 更新文档
 
 // 匹配更新
-db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
+// db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 
 // db.col.update({name:'gongyz'},{adress: '江西'}, {upsert: true})
 
@@ -252,9 +250,9 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 
 // $position、$sort、$slice可以一起使用，但这三个操作符的执行顺序是：$position、$sort、$slice，写在命令中操作符的顺序并不重要，并不会影响命令的执行顺序
 
-// db.col.updateMany({'title':'MongoDB 教程'}, {$push: {arr: {$each: [6, 8], $position: 0, $sort: -1, $slice: 2}}})
-
-// 更新数组中所有元素
+// db.col.updateMany({'title':'MongoDB 教程'}, {$push: {arr: {$each: [6, 8], $position: 0, $sort: -1, $slice: 2}}})
+
+// 更新数组中所有元素
 // db.col.updateMany({'title':'MongoDB 教程'}, {$set: {'arr.$[]': 'updated'}})
 
 // $是数组中第一个符合筛选条件的数组元素的占位符（query中需要指明要更新的数组元素）
@@ -486,7 +484,7 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 //         }
 //     }
 // ])
-// 
+
 
 // 展开时将数组元素在原数组中的下标位置写入一个指定的字段中
 // db.user.aggregate([
@@ -515,7 +513,7 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 //         $sort: {balance: 1, 'name.lastName': -1}
 //     }
 // ]) 
-
+// 
 
 // $lookup：对输入文档进行查询操作，需要另一个查询集合参与，查询结果会多出一个新字段
 // $lookup: {
@@ -541,15 +539,15 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 //         }
 //     }
 // ]) 
-
+// 
 
 // 如果localField是一个数组字段，可以先对数组字段进行展开
 // db.user.aggregate([
 //     {
 //         $unwind: {
-//           path: '$currency'
+//           path: '$currency',
 //           preserveNullAndEmptyArrays: true
-//         },
+//         }
 //     },
 //     {
 //         $lookup: {
@@ -566,7 +564,7 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 // $lookup: {
 //     from: <collection to join>,
 //     let: {<var_1>: <expression>, ..., <var_n>: <expression>},
-//    pipeline: [<pipeline to execute on the collection to join>],
+//     pipeline: [<pipeline to execute on the collection to join>],
 //     as: <output array field>
 // }
 
@@ -694,7 +692,7 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 //        $out: 'output'
 //     }
 // ])
-// 
+
 // 如果聚合管道操作遇到错误，$out不会创建新集合或者是覆盖已存在的集合内容
 
 // MongoDB对聚合操作的优化
@@ -911,18 +909,14 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 
 // 创建一个多键索引(用于数组的索引，数组字段中的每一个元素，都会在多键索引中创建一个键)
 // db.userWithIndex.createIndex({currency: 1})
-
-
-
-// 查看集合中已经存在的索引
+
+// 查看集合中已经存在的索引
 // db.userWithIndex.getIndexes()
-
-
 
 // 查询分析，使用explain()分析索引的效果
 
 // 使用没有创建索引的字段进行搜索
-// COLLSCAN
+// COLLSCAN (Collection Scan 扫描整个集合，低效的查询)
 // db.userWithIndex.find({balance: 100}).explain()
 
 // 使用已经创建索引的字段进行搜索
@@ -931,12 +925,12 @@ db.col.update({title: 'MongoDB 进阶'},{name: 'gongyz'})
 // db.userWithIndex.find({name: 'alice'}).explain()
 
 // 仅返回创建了索引的字段（查询效率更高）
-// IXSCAN —> PROJECTION
+// PROJECTION —> IXSCAN
 // db.userWithIndex.find({name: 'alice'}, {_id: 0, name: 1}).explain()
 
 // 使用已经创建索引的字段进行排序
 // IXSCAN —> FETCH
-// db.userWithIndex.find().sort({name: 1, balance: -1}).explain()
+db.userWithIndex.find().sort({name: 1, balance: -1}).explain()
 
 // 使用未创建索引的字段进行排序
 // COLLSCAN —> SORT_KEY_GENERATOR —> SORT
