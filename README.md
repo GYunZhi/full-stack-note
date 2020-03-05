@@ -4,13 +4,17 @@
 
 **如何支持：**
 - 点击右上角Star :star: 给予关注
+
 - 分享给您身边更多的小伙伴
 
-> **作者：** Mr.Gong，前端工程师，[个人博客](https://gongyz.cn)。
+- 关注公众号 [Web前端技术栈](https://gongyz.oss-cn-shenzhen.aliyuncs.com/blog/20200304100434.jpg)
+
+> **作者：** Mr.Gong，前端工程师。
 
 ## 技术栈目录
 
 * [`JavaScript`](/javascript/closure.md)
+* [`Vue`](/vue/component.md)
 * [`Node.js`](/node/base.md)
 * [`React Native`](/react-native/sign-package.md)
 * [`DevOps`](/docker/base.md)

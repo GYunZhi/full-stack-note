@@ -11,6 +11,10 @@
   - [Web Worker 使用教程](/javascript/web-worker.md)
   - [JavaScript 运行机制](/javascript/operation.md)
 
+- Vue 基础
+
+  - [Vue 组件化](/vue/component.md)
+
 - Node.js 基础
 
   - [Node 安装](/node/install.md)
