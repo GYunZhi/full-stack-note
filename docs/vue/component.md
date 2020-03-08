@@ -396,6 +396,33 @@ export default function create(Component, props) {
   return comp;
 }
 
+// 简单单例模式处理
+const create = (function(){
+  let comp;  
+  return function(Component, props){
+    if(!comp) {
+      const vm = new Vue({
+        render(h) {
+          return h(Component, {
+            props
+          })
+        }
+      }).$mount(); 
+      document.body.appendChild(vm.$el);
+      comp = vm.$children[0];
+      comp.remove = function () {
+        if (comp) {
+          document.body.removeChild(vm.$el);
+          vm.$destroy();
+        }
+        comp = null
+      }
+    }
+    return comp
+  }
+})()
+
+export default create
 ```
 
 ## 自定义Tree组件

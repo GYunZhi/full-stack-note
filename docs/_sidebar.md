@@ -14,6 +14,9 @@
 - Vue 基础
 
   - [Vue 组件化](/vue/component.md)
+  - [手写 Vue 的源码](/vue/vue-source.md)
+  - [构建自己的 Vue Router](/vue/router-source.md)
+  - [构建自己的 Vuex](/vue/vuex-source.md)
 
 - Node.js 基础
 
