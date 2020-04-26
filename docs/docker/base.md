@@ -1112,7 +1112,7 @@ docker stack services wordpress
 
 **注意：版本号小于 3.1 会报错：secrets Additional property secrets is not allowed**
 
-### DevOps 实践
+## DevOps 实践
 
 环境：centos7
 

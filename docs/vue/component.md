@@ -1,6 +1,4 @@
-## Vue组件化常用技术
-
-### 组件通信
+## 组件通信
 
 组件通信一般分为以下几种情况：
 
@@ -11,17 +9,17 @@
 
 对于以上每种情况都有多种方式去实现，接下来就来学习下如何实现。
 
-**父子通信**
+### **父子通信**
 
 父组件通过 `props` 传递数据给子组件，子组件通过 `emit` 发送事件传递数据给父组件，这两种方式是最常用的父子通信实现办法。
 
 当然我们还可以通过访问 `$parent` 、 `$children` 、`$refs` 对象来访问组件实例中的方法和数据。
 
-**兄弟组件通信**
+### **兄弟组件通信**
 
 对于这种情况可以通过查找父组件中的子组件实现，也就是 `this.$parent.$children`，在 `$children`中可以通过组件 `name` 查询到需要的组件实例，然后进行通信。
 
-**跨多层级组件通信**
+### **跨多层级组件通信**
 
 对于这种情况可以使用 **Vue 2.2** 新增的 API **provide / inject**，虽然文档中**不推荐直接使用在业务中**，但是如果用得好的话还是很有用的。
 
@@ -110,25 +108,63 @@ class Bus {
 Vue.prototype.$bus = new Bus()
 ```
 
-### 插槽
+## 插槽
 
-Vue2.6.0 之后采用全新v-slot语法取代之前的slot、slot-scope
+### 匿名插槽
 
-```vue
-<!-- 旧语法 -->
-<Comp1>默认插槽</Comp1>
+```html
+// comp1
+<div>
+   <slot></slot>
+</div
 
+// parent
+<Comp2>
+   <div>默认插槽</div>
+</Comp2>
+```
+
+### 具名插槽
+
+```html
+// comp2
+<div>
+  <h3>
+    <slot></slot>
+  </h3>
+  <slot name="content"></slot>
+</div>
+
+// parent
 <Comp2>
   <div>默认插槽</div>
   <!-- slot="插槽名" -->
   <template slot="content">content 插槽</template>
 </Comp2>
+```
 
+### 作用域插槽
+
+```html
+// comp3
+<div>
+  <h3>作用域插槽</h3>
+  <!-- 通过绑定指定作用域 -->
+  <slot :foo="foo"></slot>
+</div>
+
+// parent
 <Comp3>
   <!-- slot-scope="作用域上下文" -->
   <template slot-scope="ctx">来自子组件数据：{{ctx.foo}}</template>
 </Comp3>
+```
 
+### Vue2.6.0新语法
+
+Vue2.6.0 之后采用全新v-slot语法取代之前的slot、slot-scope
+
+```vue
 <!-- 2.6.0 新语法 -->
 <!--
 在 2.6.0 中，我们为具名插槽和作用域插槽引入了一个新的统一的语法 (即 v-slot 指令)。
@@ -159,7 +195,7 @@ Vue2.6.0 之后采用全新v-slot语法取代之前的slot、slot-scope
 </Comp3>
 ```
 
-### 递归组件
+## 递归组件
 
 - 递归组件必须要有结束条件
 - name对递归组件时必要的（递归组件调用自己不需要注册，需要提供name）
@@ -216,9 +252,9 @@ export default {
 </script>
 ```
 
-### v-model 和 .sync
+## v-model 和 .sync
 
-#### v-model
+### v-model
 
 ```vue
 <!-- v-model是语法糖 -->
@@ -287,7 +323,7 @@ export default {
 </style>
 ```
 
-#### .sync
+### .sync
 
 ```vue
 <c-input-sync :value.sync="username"></c-input-sync>
@@ -319,6 +355,11 @@ export default {
 
 ## 自定义表单组件
 
+### Input
+
+- 双向绑定：@input、:valu
+- 派发校验事件
+
 [inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)：默认情况下父组件中不被认作 props 的特性绑定将会“回退”且作为普通的 HTML 特性应用在子组件的根元素上，通过设置 `inheritAttrs: false `，就不会绑定到根元素上。
 
 [$attrs](https://cn.vuejs.org/v2/api/#vm-attrs)： 包含了父组件中不作为 prop 被识别 (且获取) 的特性绑定 (class 和 style 除外)。 使用 `v-bind="$attrs"` 这些属性会可以直接绑定到非根元素上。
@@ -346,7 +387,6 @@ export default {
   methods: {
     onInput(e) {
       this.$emit("input", e.target.value);
-
       this.$parent.$emit("validate");
     }
   }
@@ -358,11 +398,127 @@ export default {
 
 ```
 
+### FormItem
+
+- 给Input预留插槽 - slot
+- 能够展示label和校验信息
+- 能够进行校验
+
+```vue
+<template>
+  <div>
+    <label v-if="label">{{label}}</label>
+    <slot></slot>
+    <p v-if="errorMessage">{{errorMessage}}</p>
+  </div>
+</template>
+
+<script>
+import Schema from "async-validator";
+export default {
+  // 接收数据
+  inject: ["form"],
+  props: {
+    label: {
+      type: String,
+      default: ""
+    },
+    prop: {
+      type: String
+    }
+  },
+  data() {
+    return {
+      errorMessage: ""
+    };
+  },
+  mounted() {
+    // 勘误
+    // this.$on("validate", this.validate);
+
+    // 上面的代码 返回的 rejected 状态的 promise 没有被catch捕获，控制台会报错
+    this.$on('validate', () => {
+      this.validate()
+    })
+  },
+  methods: {
+    validate() {
+      // 做校验
+      const value = this.form.model[this.prop];
+      const rules = this.form.rules[this.prop];
+      // npm i async-validator -S
+      const desc = { [this.prop]: rules };
+      const schema = new Schema(desc);
+      // return的是校验结果的Promise
+      return schema.validate({ [this.prop]: value }, errors => {
+        if (errors) {
+          this.errorMessage = errors[0].message;
+        } else {
+          this.errorMessage = "";
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+</style>
+```
+
+### Form 
+
+- 给FormItem留插槽
+- 设置数据和校验规则 
+- 全局校验
+
+```vue
+<template>
+  <div>
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+export default {
+  // 跨层级传递数据
+  provide() {
+    return {
+      form: this
+    };
+  },
+  props: {
+    model: {
+      type: Object,
+      required: true
+    },
+    rules: {
+      type: Object
+    }
+  },
+  methods: {
+    validate(cb) {
+      const tasks = this.$children
+        .filter(item => item.prop)
+        .map(item => item.validate());
+      // 所有任务都通过才算校验通过
+      Promise.all(tasks)
+        .then(() => cb(true))
+        .catch(() => cb(false));
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+</style>
+```
+
 ## 自定义弹框组件
 
 弹框组件通常在当前 vue 实例之外独立存在，通常挂载于 body 上，通过 js 动态创建，不需要再任何组件中声明，可以使用**单例模式**，避免重复创建。
 
-> 思考：使用单例模式处理弹框组件
+- 组件实例创建函数：create函数
 
 ```javascript
 import Vue from 'vue';
@@ -395,7 +551,105 @@ export default function create(Component, props) {
   }
   return comp;
 }
+```
 
+Notice组件
+
+- 插槽预留
+- 标题、内容等属性 
+- 自动关闭
+
+```vue
+<template>
+  <div class="box" v-if="isShow">
+    <h3>{{title}}</h3>
+    <p class="box-content">{{message}}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    title: {
+      type: String,
+      default: ""
+    },
+    message: {
+      type: String,
+      default: ""
+    },
+    duration: {
+      type: Number,
+      default: 1000
+    }
+  },
+  data() {
+    return {
+      isShow: false
+    };
+  },
+  methods: {
+    show() {
+      this.isShow = true;
+      setTimeout(this.hide, this.duration);
+    },
+    hide() {
+      this.isShow = false;
+      this.remove();
+    }
+  }
+};
+</script>
+
+<style scoped>
+.box {
+  position: fixed;
+  width: 100%;
+  top: 16px;
+  left: 0;
+  text-align: center;
+  pointer-events: none;
+}
+.box-content {
+  width: 200px;
+  margin: 10px auto;
+  font-size: 14px;
+  border: blue 3px solid;
+  padding: 8px 16px;
+  background: #fff;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+</style>
+
+```
+
+- 使用
+
+```js
+<script>
+import Notice from "@/components/notice/KNotice";
+
+export default {
+  methods: {
+    submitForm(form) {
+      this.$refs[form].validate(valid => {
+        const notice = this.$create(Notice, {
+          title: "社会你杨哥喊你来搬砖",
+          message: valid ? "请求登录!" : "校验失败!",
+          duration: 1000
+        });
+        notice.show();
+      });
+    }
+  }
+};
+</script>
+```
+
+> 思考：使用单例模式处理弹框组件
+
+```js
 // 简单单例模式处理
 const create = (function(){
   let comp;  
@@ -436,9 +690,9 @@ export default create
     </div>
     <ul v-show="open" v-if="isFolder">
       <item 
-            class="item" 
-            v-for="model in model.children" 
-            :model="model" :key="model.title">
+      	class="item" 
+        v-for="model in model.children" 
+        :model="model" :key="model.title">
   		</item>
     </ul>
   </li>
@@ -474,5 +728,3 @@ export default {
 };
 </script>
 ```
-
- 

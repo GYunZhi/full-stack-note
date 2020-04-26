@@ -1,15 +1,13 @@
 ## 案例项目
 
 ```bash
-为了方便讲解，我写了一个 demo，请先安装一下
-$ git clone https://github.com/GYunZhi/cnode.git
-$ cd cnode && yarn
-$ yarn start
+# 为了方便讲解，我写了一个 demo，请先安装一下
+git clone https://github.com/GYunZhi/cnode.git
+cd cnode && yarn
+yarn start
 ```
 
 ## 三大原则
-
-**Redux 可以用这三个基本原则来描述：**
 
 ### 单一数据源
 
@@ -172,9 +170,7 @@ Store提供了一些方法。让我们很方便的操作数据。
 
 ### 流程图
 
-![流程图](https://camo.githubusercontent.com/76224d874f32535aa62c0cd01750fb71fb02cf53/687474703a2f2f70362e7168696d672e636f6d2f642f696e6e2f39613331326463632f7265647578466c6f772e706e67)
-
- 
+![](https://gongyz.oss-cn-shenzhen.aliyuncs.com/blog/20200319135917.png)
 
 ## 详细介绍
 
@@ -531,6 +527,6 @@ export default function bindActionCreators(actionCreators, dispatch) {
 
 **加了React-Redux之后的流程图**
 
-![流程图](https://camo.githubusercontent.com/1d3eb7f2982f8c6982a6e74f1dd6fbe872189845/687474703a2f2f70392e7168696d672e636f6d2f642f696e6e2f61386162336561342f72656163742d72656475782e706e67)
+![](https://gongyz.oss-cn-shenzhen.aliyuncs.com/blog/20200319140005.png)
 
  

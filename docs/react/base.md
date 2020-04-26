@@ -20,29 +20,29 @@ npm run eject
 文件结构
 
 ```
-├── README.md 						文档
-├── public 							  静态资源
+├── README.md             文档
+├── public                静态资源
 │ ├── favicon.ico
 │ ├── index.html
 │ └── manifest.json
-└── src 							    源码
+└── src                   源码
 ├── App.css
-├── App.js 							  根组件
+├── App.js                根组件
 ├── App.test.js
-├── index.css 						全局样式
-├── index.js 						  入口文件
+├── index.css             全局样式
+├── index.js              入口文件
 ├── logo.svg
-└── serviceWorker.js 			pwa支持
-├── package.json  				npm依赖
+└── serviceWorker.js      pwa支持
+├── package.json          npm依赖
 ├── config
-    ├── env.js 						处理.env环境变量配置文件
-    ├── paths.js 					提供各种路径
-    ├── webpack.config.js           webpack	配置文件
-	└── webpackDevServer.config.js 	  发服务器配置文件
-└── scripts 						   启动、打包和测试脚本
-    ├── build.js 					 打包脚本
-    ├── start.js 					 启动脚本
-    └── test.js 					 测试脚本
+    ├── env.js            处理.env环境变量配置文件
+    ├── paths.js          提供各种路径
+    ├── webpack.config.js             webpack配置文件
+	└── webpackDevServer.config.js    开发服务器配置文件
+└── scripts                启动、打包和测试脚本
+    ├── build.js           打包脚本
+    ├── start.js           启动脚本
+    └── test.js            测试脚本
 ```
 
 ## JSX 语法
@@ -294,41 +294,43 @@ this.state.counter += 1; // 错误的
 
 ```js
 componentDidMount() {
-	// 假如couter初始值为 0，执行三次以后其结果是多少？ // 1
+	// 假如couter初始值为 0，执行三次以后其结果是多少？
 	this.setState({counter: this.state.counter + 1})
 	this.setState({counter: this.state.counter + 1})
 	this.setState({counter: this.state.counter + 1})
 
-  // 执行之后结果为：3
-  // this.setState((state, props) => ({ counter: state.counter + 1}))
-  // this.setState((state, props) => ({ counter: state.counter + 1}))
-  // this.setState((state, props) => ({ counter: state.counter + 1}))
+  // 执行之后结果是多少？
+  this.setState((prevState, props) => ({ counter: prevState.counter + 1}))
+  this.setState((prevState, props) => ({ counter: prevState.counter + 1}))
+  this.setState((prevState, props) => ({ counter: prevState.counter + 1}))
 }
 ```
 
 - setState通常是异步的，因此如果要获取到最新状态值有以下几种方式：
 
-  - 使用 setState 第二个参数
+  > setstate在原生事件，setTimeout,setInterval,promise等异步操作中，state会同步更新
 
+  - 使用 setState 第二个参数
+  
   ```js
-  // setState()函数接受两个参数，一个是一个对象，就是设置的状态，还有一个是一个回调函数,是在设置状态成功之   // 后执行的
+  // setState()函数接受两个参数，一个是一个对象，就是设置的状态，还有一个是一个回调函数,是在设置状态成功之   后执行的
   this.setState({counter: this.state.counter + 1}, () => {
     console.log(this.state.counter)
-  })
+})
   ```
 
   - 使用定时器
-
+  
   ```js
   this.setState({counter: this.state.counter + 1})
   console.log(this.state.counter) // 0
   setTimeout(() => {
      console.log(this.state.counter) // 1
-  }, 0)
+}, 0)
   ```
 
   - 原生事件中修改状态
-
+  
   ```js
   changeValue = () => {
     this.setState({ counter: this.state.counter + 1 })
@@ -336,6 +338,19 @@ componentDidMount() {
   }
   
   document.body.addEventListener('click', this.changeValue, false)
+  ```
+  
+  - promise
+  
+  ```js
+  const promise = new Promise(function (resolve, reject) {
+    resolve(1)
+  })
+  
+  promise.then(num => {
+    this.setState({ counter: this.state.counter + num })
+    console.log(this.state.counter) // 1
+  })
   ```
 
 ## 事件处理
@@ -636,3 +651,4 @@ class ScrollingList extends React.Component {
   }
 }
 ```
+

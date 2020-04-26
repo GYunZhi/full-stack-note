@@ -20,46 +20,70 @@ Node应用由模块组成，采用CommonJS模块化规范，在node中一个文�
 
 ####       module 对象
 
-​        CommonJS规范规定，每个模块内部，都有一个module对象，代表当前模块,它的exports属性
+CommonJS规范规定，每个模块内部，都有一个module对象，代表当前模块,它的exports属性是对外的接口。加载某个模块，其实是加载该模块的module.exports属性。
 
-​        是对外的接口。加载某个模块，其实是加载该模块的module.exports属性。
+module对象的属性：
 
-​        module对象的属性：
-
-```javascript
-	module.id 				 		模块的识别符，通常是带有绝对路径的模块文件名。
-	module.filename 	  	模块的文件名，带有绝对路径。
-	module.loaded 				返回一个布尔值，表示模块是否已经完成加载。
-	module.parent 				返回一个对象，表示调用该模块的模块。
-	module.children 			返回一个数组，表示该模块要用到的其他模块。
-	module.exports 				表示模块对外输出的值。
+```js
+module.id        # 模块的识别符，通常是带有绝对路径的模块文件名。
+module.filename  # 模块的文件名，带有绝对路径。  	
+module.loaded    # 返回一个布尔值，表示模块是否已经完成加载。
+module.parent    # 返回一个对象，表示调用该模块的模块。
+module.children  # 返回一个数组，表示该模块要用到的其他模块。
+module.exports   # 表示模块对外输出的值。
 ```
 
 ####       require 方法
 
-​        Node使用CommonJS模块规范，内置的require()用于加载模块文件,require命令的基本功能是，读入
-
-​        并执行一个JavaScript文件，然后返回该模块的module.exports属性。
+Node使用CommonJS模块规范，内置的require()用于加载模块文件,require命令的基本功能是，读入并执行一个JavaScript文件，然后返回该模块的module.exports属性。
 
 ####       exports 变量
 
-​        在模块中，还有一个变量exports，它是module.exports对象的引用，在使用exports变量时，
+在模块中，还有一个变量exports，它是module.exports对象的引用，在使用exports变量时，注意不要破坏它和module.exports对象之间的引用关系。我们经常看到这样的写法：
 
-​        注意不要破坏它和module.exports对象之间的引用关系。
+```js
+exports = module.exports = somethings
+```
 
-​        我们经常看到这样的写法：
+上面的代码等价于:
 
-​        exports = module.exports = somethings
+```js
+module.exports = somethings
 
-​        上面的代码等价于:
+exports = module.exports
+```
 
-​        module.exports = somethings
+原理很简单，即 module.exports 指向新的对象时，exports 断开了与 module.exports 的引用，那么通过exports = module.exports 让 exports 重新指向 module.exports 即可。
 
-​        exports = module.exports
+```js
+function add (x, y) {
+  return x + y
+}
 
-​        原理很简单，即 module.exports 指向新的对象时，exports 断开了与 module.exports 的引用，那么通过 
+function minus (x, y) {
+  return x -y
+}
 
-​        exports = module.exports 让 exports 重新指向 module.exports 即可。
+// ES Module 导出的模块，在使用 require 函数导入时默认放在了 default 属性下面
+export default {
+  add,
+  minus
+}
+
+// 改变 module.exports 的引用之后，后面再使用 exports 是无效的
+// module.exports = {
+//   add
+// }
+
+// exports.minus = minus 
+
+// 保证 exports 和 module.exports 引用关系不被破坏
+// exports = module.exports = {
+//   add
+// }
+
+// exports.minus = minus 
+```
 
 ###  模块加载中的两个问题
 
@@ -106,13 +130,13 @@ Node应用由模块组成，采用CommonJS模块化规范，在node中一个文�
 process对象是一个全局变量，可以在任何地方都能访问到它，通过这个对象提供的属性和方法，使我们可以对当前运行的程序的进程进行访问和控制。
 
 ```javascript
-process.argv 				 	 	返回一个包含命令行参数的数组
-process.env 				   	返回用户环境信息
-process.version 		   	返回node版本信息
-process.versions 		   	返回node及node依赖包版本信息
-process.pid 						返回进程的pid
-process.title 					返回当前进程显示的名称
-process.arch 						返回CPU处理器架构
+process.argv      # 返回一个包含命令行参数的数组
+process.env       # 返回用户环境信息
+process.version   # 返回node版本信息
+process.versions  # 返回node及node依赖包版本信息
+process.pid       # 返回进程的pid
+process.title     # 返回当前进程显示的名称
+process.arch      # 返回CPU处理器架构
 ```
 
  
@@ -276,13 +300,13 @@ process.stdin.on('data', function (chunk) {
 静态方法
 
 ```javascript
-Buffer.isEncoding('utf-8') 		   检测Buffer对象是否支持某种编码
+Buffer.isEncoding('utf-8')        # 检测Buffer对象是否支持某种编码
 
-Buffer.isBuffer(bf) 					  判断某个对象是否是Buffer对象
+Buffer.isBuffer(bf)               # 判断某个对象是否是Buffer对象
 
-Buffer.byteLength(str)           返回该字符串的字节长度，encoding编码默认是utf-8
+Buffer.byteLength(str)            # 返回该字符串的字节长度，encoding编码默认是utf-8
 
-Buffer.concat(arr,[totallLength]) 返回一个将传入的buffer数组中所有的buffer对象拼接在一起新的buffer对象
+Buffer.concat(arr,[totallLength]) # 返回一个将传入的buffer数组中所有的buffer对象拼接在一起新的buffer对象
 
 var str1='miaov';
 var str2='妙味';
@@ -338,13 +362,13 @@ process.stdin.on('data',function (chunk){
 	fs.read(fd, buffer, offset, length, position, callback)  异步
 	fs.readSync(fd, buffer, offset, length, position)				同步,返回bytesRead的个数
 
-  fd:	通过open方法成功打开一个文件返回的编号,用来标识打开的文件
+  fd: 通过open方法成功打开一个文件返回的编号,用来标识打开的文件
   buffer：数据将被写入到的 buffer 对象
-  offset:	读取的内容添加到buffer中的起始位置
-  length:	是一个整数，指定要读取的字节数
-  position:	读取文件的起始位置
+  offset: 读取的内容添加到buffer中的起始位置
+  length: 是一个整数，指定要读取的字节数
+  position: 读取文件的起始位置
   callback: 
-    error: 	文件读取失败时错误信息保存在err对象里面，如果成功err为null
+    error: 文件读取失败时错误信息保存在err对象里面，如果成功err为null
     bytesRead: 读取的字节数
     buffer: 读取完成之后的buffer对象
 
@@ -390,7 +414,7 @@ process.stdin.on('data',function (chunk){
     length: 是一个整数，指定要写入的字节数
     position：指向从文件开始写入数据的的起始位置
     callback：
-         error:  文件写入失败时错误信息保存在error对象里面，如果成功error为null
+         error: 文件写入失败时错误信息保存在error对象里面，如果成功error为null
          bytesWritten: 写入的字节数
          buffer: 读取完成之后的buffer对象
  
@@ -818,8 +842,6 @@ fs.readFile(__dirname + "/1.txt", function(err, data) {
   }
 });
 
-
-
 // promise
 // readFile(__dirname + "/1.txt").then(data => {
 //   console.log(data.toString())
@@ -830,8 +852,6 @@ fs.readFile(__dirname + "/1.txt", function(err, data) {
 // }).then(data => {
 //   console.log(data.toString())
 // })
-
-
 
 // generate
 // const co = require("co")
@@ -865,8 +885,6 @@ fs.readFile(__dirname + "/1.txt", function(err, data) {
 // gen.next()
 
 // co(generator)
-
-
 
 // async/await
 // (async() => {

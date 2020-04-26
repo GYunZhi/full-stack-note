@@ -1,6 +1,6 @@
 ## 概述
 
-事件是异步编程的一种实现，事件机制是对**观察者模式**（有时被称作发布/订阅模式 ）的进一步抽象。观察者(Observer)相当于事件监听者，被观察者(Observable)或者说主题(Subject)相当于事件源和事件，事件发生时通知事件监听者，执行相应的回调函数。
+事件是异步编程的一种实现，事件机制是对**观察者模式**的进一步抽象。观察者(Observer)相当于事件监听者，被观察者(Observable)或者说主题(Subject)相当于事件源和事件，事件发生时通知事件监听者，执行相应的回调函数。
 
 ![mark](https://gongyz.oss-cn-shenzhen.aliyuncs.com/blog/K67L8aEkF3.jpg)
 
@@ -16,9 +16,7 @@
 
 DOM 的事件操作（监听和触发），都定义在`EventTarget`接口。所有节点对象都部署了这个接口，其他一些需要事件通信的浏览器内置对象（比如，`XMLHttpRequest`、`AudioNode`、`AudioContext`）也部署了这个接口。
 
-```
-注意: Internet Explorer 6-8 并不支持这个方法，而是提供了类似的 `element.attachEvent` API 。如果要进行跨浏览器使用，请考虑使用有效的JavaScript 库。 
-```
+> 注意: Internet Explorer 6-8 并不支持这个方法，而是提供了类似的 `element.attachEvent` API 。如果要进行跨浏览器使用，请考虑使用有效的JavaScript 库。 
 
 该接口主要提供三个实例方法。
 

@@ -8,12 +8,18 @@
   - [ajax 基础和应用](/javascript/ajax.md)
   - [面向对象程序设计](/javascript/object.md)
   - [事件探究](/javascript/event.md)
-  - [Web Worker 使用教程](/javascript/web-worker.md)
+  - [Web Worker 指北](/javascript/web-worker.md)
   - [JavaScript 运行机制](/javascript/operation.md)
+  - [JavaScript 异步编程的演进](/javascript/async.md)
+
+- Webpack
+
+  - [Webpack 核心](/webpack/base.md)
+  - [Webpack 高级特性](/webpack/advance.md)
 
 - Vue 基础
 
-  - [Vue 组件化](/vue/component.md)
+  - [Vue 组件化常用技术](/vue/component.md)
 
 - Vue 进阶
 
@@ -23,7 +29,9 @@
 
 - React 基础
 
-  - [React 核心知识](/react/base.md)
+  - [React 核心](/react/base.md)
+  - [React 组件化常用技术](/react/component-base)
+  - [React 组件化常用技术（续）](/react/component-forward)
 
 - Node.js 基础
 
@@ -51,7 +59,6 @@
 - DataBase | MongoDB
 
   - [MongoDB 入门](/database/mongodb.md)
-  - [Mongoose](/database/mongodb.md)
 
 - DataBase | Mysql
   - [Mysql 入门](/database/mysql.md)
