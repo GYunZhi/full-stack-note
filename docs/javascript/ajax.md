@@ -347,7 +347,7 @@ window.onload = function() {
 
 Ajax的基本知识基本上都在上面，新增的特性还有一些，感兴趣的可以去看JavaScript高级程序设计（目前是第三版）。补充一句，关于Ajax文件上传可以去看看大家可以去看看我之前的文章**从 HTML5 拖放事件 探究文件上传功能**和**Blob API的使用**，另外阮一峰老师也有一篇博客[文件上传的渐进式增强](http://www.ruanyifeng.com/blog/2012/08/file_upload.html)，也推荐大家看一看。
 
-## Ajax跨域解决方案
+## ajax跨域解决方案
 
 ### JSONP
 

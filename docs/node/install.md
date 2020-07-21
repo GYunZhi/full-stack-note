@@ -61,7 +61,10 @@ nvm use 8.11.3 // 使用指定版本的node
 在安装node的同时，会一起安装好npm模块，安装完成后，要设置镜像源，以加快下载速度：
 
 ```bash
+# 设置镜像库
 npm config set registry https://registry.npm.taobao.org
+
+# 设置node源码地址
 npm config set disturl https://npm.taobao.org/dist
 ```
 

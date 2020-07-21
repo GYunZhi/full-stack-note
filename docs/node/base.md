@@ -855,13 +855,15 @@ fs.readFile(__dirname + "/1.txt", function(err, data) {
 
 // generate
 // const co = require("co")
+
+// 自己实现一个 co 函数
 // function co (gen) {
 //   var it = gen()
-//   function next(data){
-//     var result = it.next(data)
+//   function next(){
+//     var result = it.next()
 //     if (result.done) return result.value
-//     result.value.then(function(data) {
-//       next(data);
+//     result.value.then(function() {
+//       next();
 //     });
 //   }
 //   next();
