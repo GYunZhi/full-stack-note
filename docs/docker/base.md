@@ -51,8 +51,8 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 ### 底层技术
 
 - Namespace：隔离pid、net、ipc、mnt、uts
-- Control groups：对进程做资源限制（对于宿主机来说，一个容器就是一个进程）
-- Union file system：container 和 image 的分层
+- Control Groups：对进程做资源限制（对于宿主机来说，一个容器就是一个进程）
+- Union File System：container 和 image 的分层
 
 ## Docker 基础
 
@@ -65,7 +65,7 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 - 不同的 Image 可以共享相同的分层（如 #4 和 #2 共享了相同的 Base Image）
 - Image 本身是只读的
 
-**rootfs：内核空间，Linux 刚启动时会加载 bootfs 文件系统，之后 bootfs 会被卸载掉**
+**bootfs：内核空间，Linux 刚启动时会加载 bootfs 文件系统，之后 bootfs 会被卸载掉**
 
 **rootfs：用户空间的文件系统，包含我们熟悉的 /dev, /usr, /bin 等目录**
 
