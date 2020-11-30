@@ -7,10 +7,7 @@
 ```javascript
 <input v-model="searchText">
 
-<input
-	v-bind:value="searchText"
-	v-on:input="searchText = $event.target.value"
->
+<input v-bind:value="searchText" v-on:input="searchText = $event.target.value">
 ```
 
 ### 自定义输入组件
@@ -20,21 +17,12 @@
 ```javascript
 Vue.component('custom-input', {
   props: ['value'],
-  template: `
-    <input
-      v-bind:value="value"
-      v-on:input="$emit('input', $event.target.value)"
-    >
-  `
+  template: `<input v-bind:value="value" v-on:input="$emit('input', $event.target.value)">`
 })
 
 <custom-input v-model="searchText"></custom-input>
 
-<custom-input
-	v-bind:value="searchText"
-	v-on:input="(payload) => searchText = payload"
-></custom-input>
-
+<custom-input v-bind:value="searchText" v-on:input="(payload) => searchText = payload"></custom-input>
 ```
 
 #### custom-checkbox组件
@@ -59,10 +47,7 @@ Vue.component('custom-checkbox', {
 
 <custom-checkbox v-model="checked"></custom-checkbox>
 
-<custom-checkbox 
-	v-bind:checked="checked" 
-	v-on:change="(payload) => checked = payload"
-></custom-checkbox>
+<custom-checkbox v-bind:checked="checked" v-on:change="(payload) => checked = payload"></custom-checkbox>
 ```
 
 

@@ -285,8 +285,6 @@ echo 'Hello World' > ~/test.txt
 
 ## 运维常用命令
 
-> 任务时间：5min ~ 10min
-
 ### ping 命令
 
 对 cloud.tencent.com 发送 4 个 ping 包, 检查与其是否联通

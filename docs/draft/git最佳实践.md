@@ -1,4 +1,4 @@
-# git最佳实践
+## Git在团队开发中的最佳实践
 
 如果代码需要代码规范一样，代码管理同样需要一个清晰的流程和规范，Vincent Driessen 同学为了解决这个问题提出了 [Git Flow](http://nvie.com/posts/a-successful-git-branching-model/) 分支模型。
 
@@ -146,3 +146,53 @@ wget -q -O - --no-check-certificate https://github.com/nvie/gitflow/raw/develop/
 - **开始一个Hotfix:** git flow hotfix start VERSION [BASENAME]
 - **发布一个Hotfix:** git flow hotfix finish VERSION
 
+## Git 提交规范
+
+使用当前较为主流的 [AngularJS 的 commit 规范](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
+
+每次提交，Commit message 都包括三个部分：Header，Body 和 Footer
+
+```
+<type>(<scope>): <subject>
+// 空一行
+<body>
+// 空一行
+<footer>
+```
+
+其中，Header 是必需的，Body 和 Footer 可以省略
+
+### Header
+
+Header部分只有一行，包括三个字段：type（必需）、scope（可选）和subject（必需）
+
+#### type
+
+用来标识 commit 的类型，总共有以下 7 个标识：
+
+- feat：新功能（feature）
+- fix：修补 bug
+- docs：文档发生修改 (documentation)
+- style：不影响代码运行的更改（空格，格式，缺少分号等）
+- refactor：重构（即不是新增功能，也不是修改bug的代码变动）
+- test：添加或修改测试用例
+- chore：除上述之外的修改
+
+#### scope
+
+用来标识改动所影响的范围，视项目而定
+
+#### subject
+
+改动的简短描述，不超过 50 字符长度
+
+### Body
+
+本次 commit 的详细描述
+
+### Footer
+
+主要用于两种情况：
+
+- 重大的不兼容改动: 用于给出改动说明及解决方案。
+- 关联 issues: 用于关闭相应 issues
