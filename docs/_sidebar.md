@@ -9,7 +9,6 @@
   - [面向对象程序设计](/javascript/object.md)
   - [事件探究](/javascript/event.md)
   - [Web Worker 指北](/javascript/web-worker.md)
-  - [JavaScript 运行机制](/javascript/operation.md)
   - [JavaScript 异步编程的演进](/javascript/async.md)
 
 - Webpack
